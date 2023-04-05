@@ -90,7 +90,7 @@ public class Main {
 			dead[fish] = true;
 			huntFish(eatenSum + fish, cx, cy, fishInfo[fish].dir);
 			dead[fish] = false;
-			map[sharkY][sharkX] = 0;
+//			map[sharkY][sharkX] = 0;
 			map[cy][cx] = fish;
 		}
 		
