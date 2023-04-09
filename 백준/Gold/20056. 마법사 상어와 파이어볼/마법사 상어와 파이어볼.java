@@ -19,36 +19,6 @@ public class Main {
 			this.s = s;
 			this.d = d;
 		}
-		public int getR() {
-			return r;
-		}
-		public void setR(int r) {
-			this.r = r;
-		}
-		public int getC() {
-			return c;
-		}
-		public void setC(int c) {
-			this.c = c;
-		}
-		public int getM() {
-			return m;
-		}
-		public void setM(int m) {
-			this.m = m;
-		}
-		public int getS() {
-			return s;
-		}
-		public void setS(int s) {
-			this.s = s;
-		}
-		public int getD() {
-			return d;
-		}
-		public void setD(int d) {
-			this.d = d;
-		}
 	}
 	static int N, M, K;
 	static int[] dx = {0, 1, 1, 1, 0, -1, -1, -1}, dy = {-1, -1, 0, 1, 1, 1, 0, -1}; // 방향 0,1,2,3,4,5,6,7에 따라 설정
@@ -92,10 +62,10 @@ public class Main {
 	
 	// 파이어볼 이동 처리 함수 
 	public static void moveFireball(Fireball currentFireball, int idx) {
-		int y = currentFireball.getR();
-		int x = currentFireball.getC();
-		int speed = currentFireball.getS();
-		int dir = currentFireball.getD();
+		int y = currentFireball.r;
+		int x = currentFireball.c;
+		int speed = currentFireball.s;
+		int dir = currentFireball.d;
 		
 		for(int i=0; i<speed; i++) {
 			x += dx[dir];
@@ -106,8 +76,8 @@ public class Main {
 			if(y < 0) y = N-1;
 			else if(y >=N) y= 0;
 		}
-		currentFireball.setR(y);
-		currentFireball.setC(x);
+		currentFireball.r = y;
+		currentFireball.c = x;
 		map[y][x].add(idx);	//map에 현재 처리 중인 파이어볼 인덱스 값 저장 
 	}
 	public static void checkFireball() {
@@ -122,11 +92,11 @@ public class Main {
 					boolean checkEven = true, checkOdd = true;
 					int[] decidedDir = new int[4];
 					for(int i=0; i<size; i++) {
-						massSum += fireballList.get(map[y][x].get(i)).getM();
-						speedSum +=fireballList.get(map[y][x].get(i)).getS();
+						massSum += fireballList.get(map[y][x].get(i)).m;
+						speedSum +=fireballList.get(map[y][x].get(i)).s;
 						// 파이어볼이 모두 짝수인지 또는 모두 홀수인지 check
-						if(fireballList.get(map[y][x].get(i)).getD()%2 != 0) checkEven = false;
-						else if (fireballList.get(map[y][x].get(i)).getD()%2 == 0) checkOdd = false;
+						if(fireballList.get(map[y][x].get(i)).d%2 != 0) checkEven = false;
+						else if (fireballList.get(map[y][x].get(i)).d%2 == 0) checkOdd = false;
 					}
 					if(checkEven || checkOdd) {
 						// 모두 짝수 or 홀수인 경우 
@@ -156,7 +126,7 @@ public class Main {
 	// 남아 있는 파이어볼 질량 합 계산 
 	public static int getRemains() {
 		int remainedMass = 0;
-		for(int i=0; i<fireballList.size(); i++) remainedMass += fireballList.get(i).getM();
+		for(int i=0; i<fireballList.size(); i++) remainedMass += fireballList.get(i).m;
 		return remainedMass;
 	}
 }
