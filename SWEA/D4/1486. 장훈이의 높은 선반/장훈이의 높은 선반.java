@@ -20,7 +20,7 @@ public class Solution {
 			minHeight = (int)1e9;
 			for(int i=0; i<N; i++) height[i] = sc.nextInt();
 			solve();
-			int result = Math.abs(minHeight-B);
+			int result = Math.abs(minHeight-B); // 두 높이 차
 			System.out.println("#" + test_case + " " + result);
 		}
 	}
@@ -31,7 +31,7 @@ public class Solution {
 			for(int j=0; j<N; j++) {
 				if((i&(1<<j)) != 0) sum += height[j];
 			}
-			if(sum >= B) minHeight = Math.min(minHeight, sum);
+			if(sum >= B) minHeight = Math.min(minHeight, sum);	// B 이상일 때 차가 최소로 하기 위해 최솟값 갱신
 		}
 	}
 }
