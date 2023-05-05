@@ -1,9 +1,9 @@
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import java.io.*;
 
 public class Main {
     static int N, M;
-    static int[][] map, growthAmount;
+    static int[] growthAmount;
+    static long[][] map;
     public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
@@ -11,19 +11,15 @@ public class Main {
         M = Integer.parseInt(tmp[0]);
         N = Integer.parseInt(tmp[1]);
 
-        growthAmount = new int[N][2 * M - 1];
+        growthAmount = new int[2 * M - 1];
         for(int i=0; i<N; i++) {
             tmp = br.readLine().split(" ");
             int idx = 0;
             for(int j=0; j<3; j++) {
             int repeat = Integer.parseInt(tmp[j]);
-                for(int r=0; r<repeat; r++) growthAmount[i][idx++] = j;
+            if(repeat == 0) continue;
+                for(int r=0; r<repeat; r++) growthAmount[idx++] += j;
             }
-        }
-
-        map = new int[M][M];
-        for(int i=0; i<M; i++) {
-            for(int j=0; j<M; j++) map[i][j] = 1;
         }
 
         solve();
@@ -31,36 +27,36 @@ public class Main {
     }
 
     private static void solve() {
-        for(int day=0; day<N; day++) {
             // 먼저 제일 왼쪽, 제일 위에 있는 애들 계산해주기
-            int yIdx = M-1, xIdx = 1;
-            for(int num : growthAmount[day]) {
-                if(yIdx>=0) {
+        map = new long[M][M];
+            int yIdx = M - 1, xIdx = 1;
+            for (int num : growthAmount) {
+                if (yIdx >= 0) {
                     map[yIdx--][0] += num;
                 } else {
                     map[0][xIdx++] += num;
                 }
             }
-            // 나머지 애들 계산해주기
-            for(int i=1; i<M ; i++) {
-                // i = 열
-                for(int j=1; j<M; j++) {
-                    // j = 행
-                    int numChosen = Math.max(map[i-1][j-1], map[i-1][j]); // 왼쪽 위, 위 비교
-                    numChosen = Math.max(map[i][j-1], numChosen); // 왼쪽 비교
-                    map[i][j] = numChosen;
-                }
+        // 나머지 애들 계산해주기
+        for(int i=1; i<M ; i++) {
+            // i = 열
+            for(int j=1; j<M; j++) {
+                // j = 행
+                long numChosen = Math.max(map[i-1][j-1], map[i-1][j]); // 왼쪽 위, 위 비교
+                numChosen = Math.max(map[i][j-1], numChosen); // 왼쪽 비교
+                map[i][j] = numChosen;
             }
         }
-
     }
 
-    private static void printArr() {
+    private static void printArr() throws IOException {
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         for(int i=0; i<M; i++) {
              for(int j=0; j<M; j++) {
-                 System.out.print(map[i][j] + " ");
+                 bw.append((map[i][j] + 1) + " ");  // 애벌레 1부터 시작이었으니까
              }
-            System.out.println();
+            bw.append("\n");
         }
+        bw.flush();
     }
 }
