@@ -42,9 +42,9 @@ public class Main {
             // i = 열
             for(int j=1; j<M; j++) {
                 // j = 행
-                long numChosen = Math.max(map[i-1][j-1], map[i-1][j]); // 왼쪽 위, 위 비교
-                numChosen = Math.max(map[i][j-1], numChosen); // 왼쪽 비교
-                map[i][j] = numChosen;
+                long numChosen = Math.max(map[j-1][i-1], map[j-1][i]); // 왼쪽 위, 위 비교
+                numChosen = Math.max(map[j][i-1], numChosen); // 왼쪽 비교
+                map[j][i] = numChosen;
             }
         }
     }
