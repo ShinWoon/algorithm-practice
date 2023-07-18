@@ -57,7 +57,7 @@ public class Main {
 
             if(start == 100) {
                 result = Math.min(result, cnt);
-                continue;
+                return;
             }
             for(int i=1; i<=6; i++) {
                 int next = start + i;
