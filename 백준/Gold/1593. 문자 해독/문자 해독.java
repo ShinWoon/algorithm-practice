@@ -35,7 +35,8 @@ public class Main {
             visitedW[currentCharW] += 1;
             visitedS[currentCharS] += 1;
         }
-        if (checkSame()) cnt++;
+//        if (checkSame()) cnt++;
+        if(Arrays.equals(visitedS,visitedW)) cnt++;
 
         int start, end;
         for(int i=1; i<=absS-g; i++) {
@@ -43,12 +44,13 @@ public class Main {
             end = i + g - 1;
             visitedS[S[start-1]] -= 1;
             visitedS[S[end]] += 1;
-            if(checkSame()) cnt++;
+//            if(checkSame()) cnt++;
+            if(Arrays.equals(visitedS,visitedW)) cnt++;
         }
         return cnt;
     }
-    private static boolean checkSame() {
-        for(int i=0; i<123; i++) if(visitedS[i] != visitedW[i]) return false;
-        return true;
-    }
+//    private static boolean checkSame() {
+//        for(int i=0; i<123; i++) if(visitedS[i] != visitedW[i]) return false;
+//        return true;
+//    }
 }
