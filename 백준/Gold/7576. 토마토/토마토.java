@@ -3,76 +3,64 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.StringTokenizer;
 
 public class Main {
-    private static class XY{
-        int x;
-        int y;
-        int time;
-
-        public XY(int x, int y, int time) {
-            this.x = x;
-            this.y = y;
-            this.time = time;
-        }
-    }
-    private static int N, M, TOTAL;
+    private static int N, M, totalTomatoes, time;
     private static int[] dx = {-1,0,1,0}, dy = {0,-1,0,1};
-    private static int[][] map;
+    private static int[][] box;
     private static boolean[][] visited;
-    private static Queue<XY> startQ;
+    private static Queue<Integer[]> q;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
 
-        String[] tmp = br.readLine().split(" ");
-        M = Integer.parseInt(tmp[0]);
-        N = Integer.parseInt(tmp[1]);
-        TOTAL = 0;  // 안익은 토마토 수
+        N = Integer.parseInt(st.nextToken());
+        M = Integer.parseInt(st.nextToken());
+        q = new LinkedList<>();
 
-        startQ = new LinkedList<>();
-        visited = new boolean[N][M];
-        map = new int[N][M];
-        for(int i=0; i<N; i++) {
-            tmp = br.readLine().split(" ");
-            for(int j=0; j<M; j++) {
-                map[i][j] = Integer.parseInt(tmp[j]);
-                if(map[i][j] == 1) {    // 익은 토마토는 큐에 입력
-                    startQ.add(new XY(j, i, 0));
+        totalTomatoes = 0;
+        visited = new boolean[M][N];
+        box = new int[M][N];
+        for(int i=0; i<M; i++) {
+            st = new StringTokenizer(br.readLine());
+            for(int j=0; j<N; j++) {
+                box[i][j] = Integer.parseInt(st.nextToken());
+                if(box[i][j] == 0) totalTomatoes++;
+                else if(box[i][j] == 1) {
+                    q.add(new Integer[]{i,j,0});
                     visited[i][j] = true;
-                } else if(map[i][j] == 0) { // 안익은 토마토 수를 확인하기 위해
-                    TOTAL++;
                 }
             }
         }
 
-        int result = solve();
-        System.out.println(result);
+        time = 0;
+        solve();
+        System.out.println(time);
     }
-
-    private static int solve() {
-        int currentTime = 0;
-        while (!startQ.isEmpty()) {
-            XY xy = startQ.poll();
-            int x = xy.x;
-            int y = xy.y;
-            currentTime = xy.time;
-
-//            System.out.println("X " + x + " Y " + y);
+    private static void solve() {
+        int turn = 0;
+        while (!q.isEmpty()) {
+            Integer[] info = q.poll();
+            int y = info[0];
+            int x = info[1];
+            turn = info[2];
 
             for(int i=0; i<4; i++) {
                 int cx = x + dx[i];
                 int cy = y + dy[i];
-                if(cx<0 || cx>=M || cy<0 || cy>=N) continue;
-                if(map[cy][cx] == 0 && !visited[cy][cx]) {
-                    startQ.add(new XY(cx, cy, currentTime + 1));
+                if(cx<0 || cx>=N || cy<0 || cy>=M) continue;
+                if(box[cy][cx] == 0 && !visited[cy][cx]) {
+                    q.add(new Integer[]{cy,cx,turn + 1});
+                    totalTomatoes--;
                     visited[cy][cx] = true;
-                    TOTAL--;    // 안익은 토마토 수 줄이기
                 }
             }
         }
-        if(TOTAL == 0) {    // 다 익었을 경우
-            return currentTime;
+        if(totalTomatoes == 0) {
+            time = turn;
+        } else {
+            time = -1;
         }
-        return -1;  // 다 안익으면
     }
 }
