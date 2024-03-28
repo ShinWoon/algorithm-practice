@@ -18,20 +18,23 @@ public class Main {
 
         RESULT = Integer.MAX_VALUE;
         for(int i=0; i<N-1; i++) {
-            int diff = arr[i+1] - arr[i];
-
-            int cnt = 0;
-            for(int j=0; j<N; j++) {
-                int num = 0;    // 이번에 되어야할 숫자
-                if(j < i) { // 감소나 증가가 앞에 숫자는 반대로 가야하니까 -1 곱하기
-                     num = -1 * diff * (i - j) + arr[i];
-                } else {    // 뒤로 이어지는 건 그냥 하면 됨
-                    num = diff * (j -i) + arr[i];
+            for(int j=i+1; j<N; j++) {
+                if((arr[j]-arr[i])%(j-i) != 0) continue;
+                int diff = (arr[j] - arr[i])/(j-i);
+                int cnt = 0;
+                for(int k=0; k<N; k++) {
+                    if(k == j || k == i) continue;
+                    int num = 0;    // 이번에 되어야할 숫자
+                    if(k < i) { // 감소나 증가가 앞에 숫자는 반대로 가야하니까 -1 곱하기
+                        num = -1 * diff * (i - k) + arr[i];
+                    } else {    // 뒤로 이어지는 건 그냥 하면 됨
+                        num = diff * (k - i) + arr[i];
+                    }
+                    // 일치 안하면 카드 수 증가
+                    if(num != arr[k]) cnt += 1;
                 }
-                // 일치 안하면 카드 수 증가
-                if(num != arr[j]) cnt += 1;
+                RESULT = Math.min(cnt, RESULT);
             }
-            RESULT = Math.min(cnt, RESULT);
         }
         System.out.println(RESULT);
     }
