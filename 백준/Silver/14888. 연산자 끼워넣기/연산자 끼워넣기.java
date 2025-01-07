@@ -1,93 +1,72 @@
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.Scanner;
+import java.io.*;
+import java.util.StringTokenizer;
 
 public class Main {
-	public static int N;
-	public static int max_num;
-	public static int min_num;
-	public static int[] num;
-	public static String[] op;
-	public static boolean[] visited;
-	public static String[] pArr;
-	public static int[] opType;
+    private static int N, minNum, maxNum;
+    private static int[] numArr;
+    public static void main(String[] args) throws Exception{
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        StringTokenizer st;
 
-	public static void main(String args[]) throws Exception {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		
-		N = Integer.parseInt(br.readLine());
-		num = new int[N];
-		op = new String[N - 1];
+        N = Integer.parseInt(br.readLine());
+        minNum = Integer.MAX_VALUE;
+        maxNum = Integer.MIN_VALUE;
 
-		String[] tmp = br.readLine().split(" ");
-		for (int i = 0; i < N; i++)
-			num[i] = Integer.parseInt(tmp[i]);
+        // 숫자 배열 초기화
+        numArr = new int[N];
+        st = new StringTokenizer(br.readLine());
+        for(int i=0; i<N; i++) {
+            numArr[i] = Integer.parseInt(st.nextToken());
+        }
 
-		opType = new int[4];
-		tmp = br.readLine().split(" ");
-		for (int i = 0; i < 4; i++)
-			opType[i] = Integer.parseInt(tmp[i]);
+        // 연산자 배열 초기화
+        int[] operatorArr = new int[4];
+        st = new StringTokenizer(br.readLine());
+        for(int i=0; i<4; i++) {
+            operatorArr[i] = Integer.parseInt(st.nextToken());
+        }
 
-		max_num = -100000000;
-		min_num = 100000000;
-		pArr = new String[N - 1];
-		visited = new boolean[N - 1];
+        solve(numArr[0], 1, operatorArr);
+        bw.append(String.valueOf(maxNum)).append("\n");
+        bw.append(String.valueOf(minNum));
+        bw.flush();
+    }
 
-		getPermutation(0);
-		System.out.println(max_num);
-		System.out.println(min_num);
+    private static void solve(int num, int depth, int[] operator) {
+        if(depth == N) {
+            minNum = Math.min(minNum, num);
+            maxNum = Math.max(maxNum, num);
+            return;
+        }
 
-	}
+        // 덧셈
+        if(operator[0] != 0) {
+            operator[0] -= 1;
+            solve(num+numArr[depth], depth+1, operator);
+            operator[0] += 1;
+        }
 
-	public static String putOperation(int idx) {
-		if (idx == 0)
-			return "+";
-		else if (idx == 1)
-			return "-";
-		else if (idx == 2)
-			return "*";
-		else
-			return "/";
-	}
+        // 뺄셈
+        if(operator[1] != 0) {
+            operator[1] -= 1;
+            solve(num-numArr[depth], depth+1, operator);
+            operator[1] += 1;
+        }
 
-	public static void getPermutation(int r) {
-		if (r == N - 1) {
-			doCalc();
-			return;
-		}
-		for (int i = 0; i < 4; i++) {
-			if (opType[i] == 0)
-				continue;
-			opType[i] -= 1;
-			pArr[r] = putOperation(i);
-			getPermutation(r + 1);
-			opType[i] += 1;
+        // 곱셈
+        if(operator[2] != 0) {
+            operator[2] -= 1;
+            solve(num*numArr[depth], depth+1, operator);
+            operator[2] += 1;
+        }
 
-		}
-
-	}
-
-	public static void doCalc() {
-		int[] tmp = num.clone();
-
-		for (int i = 0; i < N - 1; i++) {
-			tmp[i + 1] = doOper(tmp[i], tmp[i + 1], pArr[i]);
-		}
-		max_num = Math.max(max_num, tmp[N - 1]);
-		min_num = Math.min(min_num, tmp[N - 1]);
-	}
-
-	public static int doOper(int num1, int num2, String operation) {
-//		System.out.println(num1 + " " + num2 + " " + operation);
-		int result = 0;
-		if (operation.equals("+"))
-			result = num1 + num2;
-		else if (operation.equals("-"))
-			result = num1 - num2;
-		else if (operation.equals("*"))
-			result = num1 * num2;
-		else
-			result = num1 / num2;
-		return result;
-	}
+        // 나눗셈
+        if(operator[3] != 0) {
+            operator[3] -= 1;
+            solve(num/numArr[depth], depth+1, operator);
+            operator[3] += 1;
+        }
+        return;
+    }
 }
